@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<spells>
+	<spell name="shoot">
+		<damage>20</damage>
+		<range>64</range>
+		<cooldown>1000</cooldown>
+		<cost>
+			<mana>5</mana>
+		</cost>
+	</spell>
+	<spell name="punch">
+		<damage>50</damage>
+		<range>32</range>
+		<cooldown>5000</cooldown>
+		<cost>
+			<mana>20</mana>
+		</cost>
+	</spell>
+</spells>
