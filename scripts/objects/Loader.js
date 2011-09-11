@@ -13,6 +13,8 @@ Loader = {
 
 	endLoad: function() {
 		loadDone = true;
+		if (loadCount == 0)
+			runGame();
 	},
 
 	itemStart: function() {
@@ -24,26 +26,27 @@ Loader = {
 		if (loadCount == 0 && loadDone)
 			runGame();
 	},
-
+	
 	generateMap: function(data) {
-		var map = {
-			tileSize: $(data).find("tilesize").text(),
-			spawn: {
-				x: parseInt($(data).find("spawn").attr("x")),
-				y: parseInt($(data).find("spawn").attr("y"))
-			},
-			data: new Array(),
-			NPCs: new Array()
+		var tileSize = parseInt($(data).find("tilesize").text());
+		var spawn = {
+			x: parseInt($(data).find("spawn").attr("x")),
+			y: parseInt($(data).find("spawn").attr("y"))
 		};
+		var mapData = new Array();
+		var NPCs = new Array();
 		
 		var rawMap = $.trim($(data).find("data").text()).split("\n");
 		for (var i in rawMap) {
-			map.data.push(rawMap[i].split(","));
+			mapData.push(rawMap[i].split(","));
 		}
 		
 		$(data).find("npc").each(function(num, data) {
-			var npc = Loader.generateNPC(data);
-			map.NPCs.push(npc);
+			var npc = new Entity($(data).attr("name"));
+			npc.location.x = $(data).find("x").text();
+			npc.location.y = $(data).find("y").text();
+			npc.graphics.color = "" + Math.floor(Math.random() * 999899) + 100;
+			NPCs.push(npc);
 		});
 		
 		var tileSet = $(data).find("tileset").text();
@@ -51,27 +54,11 @@ Loader = {
 		console.log("\t'" + tileSet + "'");
 		Loader.itemStart();
 		img.onload = function() {
-			map.tileImg = this;
 			Loader.itemEnd();
 		};
 		img.src = tileSet;
 		
-		return map;
-	},
-
-	generateNPC: function(data) {
-		var npc = {
-			type: "npc",
-			name: $(data).attr("name"),
-			x: $(data).find("x").text(),
-			y: $(data).find("y").text(),
-			size: 30,
-			health: 100,
-			maxHealth: 100,
-			dead: false,
-			color: "" + Math.floor(Math.random() * 999899) + 100
-		};
-		return npc;
+		return new Map(tileSize, img, spawn, mapData, NPCs);
 	},
 
 	generateSpell: function(data) {
