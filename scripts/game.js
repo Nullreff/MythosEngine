@@ -18,6 +18,16 @@ var fps = 20;
 var gameTime = new Date().getTime();
 var lastTime = gameTime;
 
+// Mouse State
+var mouseState = {
+	x: 0,
+	y: 0,
+	left: false,
+	right: false,
+	middle: false,
+	inside: false
+};
+
 // Data
 loadCount = 0;
 
@@ -60,7 +70,7 @@ function loadContent() {
 	$.get(spellsName, function(data) {
 		console.log("Loading Spells...");
 		$(data).find("spell").each(function(num, data) {
-			var spell = Loader.generateSpell(data);
+			var spell = new Spell(data);
 			spells[spell.name] = spell;
 			console.log("\t" + spell.name + ": " + spell.damage);
 		});
@@ -71,15 +81,22 @@ function loadContent() {
 }
 
 function runGame() {
+	// Graphics
 	var g = document.getElementById('gameDisplay').getContext('2d');
 	viewport = new Viewport(g, player.location.x, player.location.y, g.canvas.width, g.canvas.height);
+	
+	// Events
 	$(window).keydown(keyDown_event);
 	$(window).keyup(keyUp_event);
 	$(window).keypress(keyPress_event);
+	$("#gameDisplay").mousemove(mouseMove_event);
+	$("#gameDisplay").mousedown(mouseDown_event);
+	$("#gameDisplay").mouseup(mouseUp_event);
+	
+	// Player Config
 	player.type = "player";
 	
-	mapLines = $.trim(map.data).split("\n");
-	sendMessage(player.x + "," + player.y);
+	// Start Game
 	gameLoop = setInterval(updateGame, 1000/fps);
 	console.log("Game Started");
 }
@@ -88,9 +105,15 @@ function updateGame() {
 	gameTime = new Date().getTime();
 	var changeTime = gameTime - lastTime;
 	lastTime = gameTime;
+	
+	// Update
 	player.update(changeTime, map);
+	$(map.NPCs).each(function(num, data) {
+		data.update(changeTime, map);
+	});
 	viewport.update(player);
 	map.draw(viewport);
+	drawSpells(gameTime);
 	drawUnits();
 	drawUI(changeTime);
 }
@@ -98,15 +121,19 @@ function updateGame() {
 function keyDown_event(event) {
 	switch (event.which) {
 		case 37: // Left
+		case 65:
 			player.movement.x -= player.movement.x < 0 ? 0 : 1;
 		break;
 		case 39: // Right
+		case 68:
 			player.movement.x += player.movement.x > 0 ? 0 : 1;
 		break;
 		case 38: // Up
+		case 87:
 			player.movement.y -= player.movement.y < 0 ? 0 : 1;
 		break;
 		case 40: // Down
+		case 83:
 			player.movement.y += player.movement.y > 0 ? 0 : 1;
 		break;
 	}
@@ -115,15 +142,19 @@ function keyDown_event(event) {
 function keyUp_event(event) {
 	switch (event.which) {
 		case 37: // Left
+		case 65:
 			player.movement.x += player.movement.x > 0 ? 0 : 1;
 		break;
 		case 39: // Right
+		case 68:
 			player.movement.x -= player.movement.x < 0 ? 0 : 1;
 		break;
 		case 38: // Up
+		case 87:
 			player.movement.y += player.movement.y > 0 ? 0 : 1;
 		break;
 		case 40: // Down
+		case 83:
 			player.movement.y -= player.movement.y < 0 ? 0 : 1;
 		break;
 	}
@@ -132,13 +163,67 @@ function keyUp_event(event) {
 function keyPress_event(event) {
 	switch (event.which) {
 		case 49: // 1
-			player.cast("shoot");
+			spells["shoot"].cast(player, player.target);
 		break;
 		case 50: // 2
-			player.cast("punch");
+			spells["punch"].cast(player, player.target);
 		break;
 		
 	}
+}
+
+function mouseMove_event(event) {
+	mouseState.x = event.pageX - this.offsetLeft;
+	mouseState.y = event.pageY - this.offsetTop;
+}
+
+function mouseDown_event(event) {
+	updateMouse(event, true);
+	if (mouseState.left)
+		checkTarget();
+}
+
+function mouseUp_event(event) {
+	updateMouse(event, false);
+}
+
+function updateKeyboard(event, type) {
+	
+}
+
+function updateMouse(event, type) {
+	
+	switch (event.which) {
+		case 1:
+			mouseState.left = type;
+		break;
+		case 2:
+			mouseState.middle = type;
+		break;
+		case 3:
+			mouseState.right = type;
+		break;
+	}
+	//console.log(event.which);
+}
+
+function checkTarget() {
+	var ent = entityAt(mouseState.x, mouseState.y);
+	player.target = ent;
+	console.log(ent);
+		
+}
+
+function entityAt(x, y) {
+	var loc = viewport.worldLocation(mouseState.x, mouseState.y);
+	var ent = null;
+	$(map.NPCs).each(function(num, data) {
+		if (data.contains(loc.x, loc.y))
+			ent = data;
+	});
+	if (player.contains(loc.x, loc.y))
+		ent = player;
+	return ent;
 }
 
 function tileCollision(tile) {
@@ -146,17 +231,18 @@ function tileCollision(tile) {
 }
 
 function drawUnits() {
-	/*for (var i in players) {
-		var x = players[i].pos.x;
-		var y = players[i].pos.y;
-		//drawUnit(x, y, i);
-	}*/
-	
 	for (var i in map.NPCs) {
-		map.NPCs[i].draw(viewport);
+		map.NPCs[i].draw(viewport, map.NPCs[i] == player.target);
 	}
 	
-	player.draw(viewport);
+	player.draw(viewport,  player == player.target);
+}
+
+function drawSpells(gameTime) {
+	for (var i in spells) {
+		if (spells[i].lastCast + 200 >= gameTime)
+			spells[i].draw(viewport, player, player.target);
+	}
 }
 
 function getFill(playerName) {
@@ -183,11 +269,21 @@ function drawUI(time) {
 			viewport.g.fillStyle = "rgb(0,255,0)";
 		} else {
 			viewport.g.fillStyle = "rgb(255,0,0)";
-			viewport.g.fillText("" + Math.round((spell.cooldown - (gameTime - spell.lastCast)) / 1000), 15, count * 10 + 50);
+			viewport.g.fillText("" + Math.round((spell.cooldown - (gameTime - spell.lastCast)) / 1000), 15, count * 10 + 110);
+		}
+		if (player.target != null && spell.range <= player.distance(player.target)) {
+			viewport.g.fillStyle = "rgb(100,100,100)";
 		}
 		viewport.g.fillText(i, 35, count * 10 + 110);
 		count++;
 	}
+	
+	// Cursor
+	viewport.g.fillStyle = "rgb(0,0,0)";
+	viewport.g.beginPath();
+	viewport.g.arc(mouseState.x, mouseState.y, 5, 0, Math.PI * 2, true);
+	viewport.g.closePath();
+	viewport.g.fill();
 }
 
 function getTarget(range) {
@@ -203,13 +299,10 @@ function getTarget(range) {
 	return num;
 }
 
-function modMana(value, target) {
-	//var newMana = target.cost.mana + value;
-	//if (newMan
-}
-
 function die(target) {
 	target.dead = true;
+	if (player.target = target)
+		player.target = null;
 	setTimeout(resetDeathNotice, target == player ? 2000 : 200, target);
 }
 
@@ -217,14 +310,14 @@ function resetDeathNotice(target) {
 	console.log("Respawned");
 	target.dead = false;
 	if (target.type == "player") {
-		target.x = map.spawn.x;
-		target.y = map.spawn.y;
+		target.location.x = map.spawn.x;
+		target.location.y = map.spawn.y;
 	} else if (target.type == "npc") {
 		var loc = getRandomLoc(true);
-		target.x = loc.x;
-		target.y = loc.y;
+		target.location.x = loc.x;
+		target.location.y = loc.y;
 	}
-	target.health = target.maxHealth;
+	target.health.current = target.health.max;
 }
 
 function getRandomLoc(checkCol) {
@@ -232,9 +325,17 @@ function getRandomLoc(checkCol) {
 		x: Math.floor(Math.random() * map.tileSize * map.data[0].length),
 		y: Math.floor(Math.random() * map.tileSize * map.data.length)
 	};
-	while (tileCollision(getTile(val.x, val.y)) && checkCol) {
+	while (map.getTile(val.x, val.y) == 2 && checkCol) {
 		val.x = Math.floor(Math.random() * map.tileSize * map.data[0].length);
 		val.y = Math.floor(Math.random() * map.tileSize * map.data.length);
 	}
 	return val;
+}
+
+function randomColor() {
+	return "rgb(" + randomNumber(255) +  "," +  randomNumber(255) +  "," +  randomNumber(255) +  ")";
+}
+
+function randomNumber(max) {
+	return Math.floor(Math.random() * (max + 1));
 }

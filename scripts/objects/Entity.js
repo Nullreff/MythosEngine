@@ -1,14 +1,15 @@
 function Entity(name) {
 	this.name = name;
 	this.target = null;
+	this.dead = false;
+	this.health = new Stat(100, 1);
+	this.resource = new Stat(100, 2);
 	this.stats = {
-		dead: false,
-		health: new Stat(100, 1),
-		resource: new Stat(100, 10)
+		
 	};
 	this.graphics = {
 		size: 30,
-		color: name	
+		color: randomColor()
 	};
 	this.movement = {
 		x: 0,
@@ -24,6 +25,10 @@ function Entity(name) {
 	
 	
 	this.update = function(time, map) {
+		// Death
+		if (this.health.current <= 0 && !this.dead)
+			die(this);
+			
 		// Movement
 		var len = Math.sqrt(Math.pow(this.movement.x, 2) + Math.pow(this.movement.y, 2));
 		if (len > 0 && !this.stats.dead) {
@@ -46,50 +51,57 @@ function Entity(name) {
 				sendMessage("movement",params);
 			}
 		}
+		
+		// Stats
+		this.health.tick(time);
+		this.resource.tick(time);
+		
 	};
 	
 	this.distance = function(entity) {
-		return Math.sqrt(Math.pow(location.x - entity.location.x, 2) + Math.pow(location.y - location.y, 2));
+		return Math.sqrt(Math.pow(this.location.x - entity.location.x, 2) + Math.pow(this.location.y - entity.location.y, 2));
 	};
 	
-	this.cast = function (spell) {
-		if (this.target == null)
-			return 1;
-		
-		if (this.distance(this.target) <= spell.range && 
-			gameTime - spell.lastCast >= spell.cooldown) 
-		{
-			modHealth(-spells[spellName].damage, map.NPCs[num]);
-			spell.lastCast = gameTime;
-		}
+	this.contains = function(x, y) {
+		return (x > this.location.x - (this.graphics.size / 2)) && 
+		   (y > this.location.y - (this.graphics.size / 2)) &&
+		   (x < this.location.x + (this.graphics.size / 2)) &&
+		   (y < this.location.y + (this.graphics.size / 2));
 	};
 	
-	this.draw = function(viewport) {
-		if (viewport.contains(this)) {
+	this.draw = function(viewport, selected) {
+		if (viewport.containsEntity(this)) {
 			
-			var health = this.stats.health.current / this.stats.health.max;
-			var resource = this.stats.resource.current / this.stats.resource.max;
+			var health = this.health.current / this.health.max;
+			var resource = this.resource.current / this.resource.max;
+			var baseX = this.location.x - viewport.x - (this.graphics.size / 2);
+			var baseY = this.location.y - viewport.y - (this.graphics.size / 2);
 			
 			// this
-			viewport.g.fillStyle = getFill(this.graphics.color);
-			viewport.g.fillRect(this.location.x - viewport.x - (this.graphics.size / 2), this.location.y - viewport.y - (this.graphics.size / 2), this.graphics.size, this.graphics.size);
+			viewport.g.fillStyle = this.graphics.color;
+			viewport.g.fillRect(baseX, baseY, this.graphics.size, this.graphics.size);
 			
 			// Bars
 			// Background
 			viewport.g.fillStyle = "rgb(0,0,0)";
-			viewport.g.fillRect(this.location.x - viewport.x - (this.graphics.size / 2), this.location.y - viewport.y - (this.graphics.size / 2) - 12, this.graphics.size, 10);
+			viewport.g.fillRect(baseX, baseY - 12, this.graphics.size, 10);
 			// Health
 			viewport.g.fillStyle = "rgb(" + parseInt(255 - (255.0 * health)) + "," + parseInt(255.0 * health) + ",0)";
-			viewport.g.fillRect(this.location.x - viewport.x - (this.graphics.size / 2) + 1, this.location.y - viewport.y - (this.graphics.size / 2) - 11, Math.ceil(parseFloat(this.graphics.size - 2) * health), 5);
+			viewport.g.fillRect(baseX + 1, baseY - 11, Math.ceil(parseFloat(this.graphics.size - 2) * health), 5);
 			// Resource
 			viewport.g.fillStyle = "rgb(0,0,255)";
-			viewport.g.fillRect(this.location.x - viewport.x - (this.graphics.size / 2) + 1, this.location.y - viewport.y - (this.graphics.size / 2) - 5, Math.ceil(parseFloat(this.graphics.size - 2) * resource), 2);
+			viewport.g.fillRect(baseX + 1, baseY - 5, Math.ceil(parseFloat(this.graphics.size - 2) * resource), 2);
+			// Selected
+			if (selected) {
+				viewport.g.fillStyle = "rgb(255,100,0)";
+				viewport.g.strokeRect(baseX - 2, baseY - 2, this.graphics.size + 4, this.graphics.size + 4);
+			}
 		}
 	};
 }
 
 function Stat(val, regen) {
-	this.current = max;
+	this.current = val;
 	this.max = val;
 	this.regen = regen;
 	this.mod = function(value) {
@@ -100,6 +112,13 @@ function Stat(val, regen) {
 			this.current = this.max;
 	};
 	this.tick = function(time) {
-		this.mod((time / 1000) * this.regen);
+		this.passedTime += time;
+		if (this.passedTime >= this.maxTime) {
+			this.mod(-(this.passedTime / this.maxTime));
+			this.passedTime = this.passedTime % this.maxTime;
+		}
 	};
+	
+	this.maxTime = 1000 / regen;
+	this.passedTime = 0;
 }

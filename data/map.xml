@@ -3,7 +3,7 @@
 	<options>
 		<tilesize>32</tilesize>
 		<tileset>images/tiles.png</tileset>
-		<spawn x="112" y="112" ></spawn>
+		<spawn x="136" y="145" ></spawn>
 	</options>
 	<npcs>
 		<npc name="test">

@@ -43,9 +43,9 @@ Loader = {
 		
 		$(data).find("npc").each(function(num, data) {
 			var npc = new Entity($(data).attr("name"));
-			npc.location.x = $(data).find("x").text();
-			npc.location.y = $(data).find("y").text();
-			npc.graphics.color = "" + Math.floor(Math.random() * 999899) + 100;
+			npc.location.x = parseInt($(data).find("x").text());
+			npc.location.y = parseInt($(data).find("y").text());
+			npc.type = "npc";
 			NPCs.push(npc);
 		});
 		
@@ -60,20 +60,5 @@ Loader = {
 		
 		return new Map(tileSize, img, spawn, mapData, NPCs);
 	},
-
-	generateSpell: function(data) {
-		var cooldown = parseInt($(data).find("cooldown").text());
-		var spell = {
-			name: $(data).attr("name"),
-			damage: parseInt($(data).find("damage").text()),
-			range: parseInt($(data).find("range").text()),
-			cooldown: cooldown,
-			lastCast: new Date().getTime() - cooldown,
-			cost: {
-				mana: $(data).find("cost").find("mana").text()
-			}
-		};
-		return spell;
-	}
 
 };

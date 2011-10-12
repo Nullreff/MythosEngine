@@ -16,10 +16,32 @@ function Viewport(g, x, y, width, height) {
 		this.width = width;
 		this.height = height;
 	};
-	this.contains = function(entity) {
-		return entity.location.x + (entity.stats.size / 2) > this.x &&
-			   entity.location.y + (entity.stats.size / 2) > this.y &&
-			   entity.location.x - (entity.stats.size / 2) < this.x + this.width &&
-			   entity.location.y - (entity.stats.size / 2) < this.y + this.height;
+	this.screenLocationE = function(entity) {
+		return this.screenLocation(entity.location.x, entity.location.y);
 	};
+	this.worldLocationE = function(entity) {
+		return this.worldLocation(entity.location.x, entity.location.y);
+	};
+	this.screenLocation = function(worldX, worldY) {
+		if (!this.containsCoords(x, y))
+			return null;
+		else
+			return { x: worldX - this.x, y: worldY - this.y};
+	};
+	this.worldLocation = function(screenX, screenY) {
+		return {x: this.x + screenX, y: this.y + screenY};
+	};
+	this.containsCoords = function(x, y, buffer) {
+		if (buffer == undefined)
+			buffer = 0;
+		return x + buffer > this.x &&
+		   y + buffer > this.y &&
+		   x - buffer < this.x + this.width &&
+		   y - buffer < this.y + this.height;
+	};
+	this.containsEntity = function(entity) {
+		return this.containsCoords(entity.location.x, entity.location.y, entity.graphics.size / 2);
+	};
+	
+	
 }
