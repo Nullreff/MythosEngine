@@ -217,7 +217,7 @@ function checkTarget() {
 }
 
 function entityAt(x, y) {
-	var loc = viewport.worldLocation(mouseState.x, mouseState.y);
+	var loc = viewport.worldLocation(x, y);
 	var ent = null;
 	$(map.NPCs).each(function(num, data) {
 		if (data.contains(loc.x, loc.y))

@@ -89,7 +89,7 @@ function Entity(name) {
 			viewport.g.fillStyle = "rgb(" + parseInt(255 - (255.0 * health)) + "," + parseInt(255.0 * health) + ",0)";
 			viewport.g.fillRect(baseX + 1, baseY - 11, Math.ceil(parseFloat(this.graphics.size - 2) * health), 5);
 			// Resource
-			viewport.g.fillStyle = "rgb(0,0,255)";
+			viewport.g.fillStyle = "rgb(50,50,255)";
 			viewport.g.fillRect(baseX + 1, baseY - 5, Math.ceil(parseFloat(this.graphics.size - 2) * resource), 2);
 			// Selected
 			if (selected) {

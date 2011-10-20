@@ -4,6 +4,8 @@ function Viewport(g, x, y, width, height) {
 	this.y = y;
 	this.width = width;
 	this.height = height;
+	
+	// Viewport Methods
 	this.update = function(entity) {
 		this.x = entity.location.x - Math.floor(this.width / 2);
 		this.y = entity.location.y - Math.floor(this.height / 2);
@@ -43,5 +45,10 @@ function Viewport(g, x, y, width, height) {
 		return this.containsCoords(entity.location.x, entity.location.y, entity.graphics.size / 2);
 	};
 	
-	
+	//UI
+	this.UI = {
+		drawFrame: function(x, y, scale, entity) {
+			
+		}	
+	};
 }
