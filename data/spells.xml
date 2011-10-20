@@ -5,7 +5,7 @@
 		<range>200</range>
 		<cooldown>1000</cooldown>
 		<cost>
-			<mana>5</mana>
+			<mana>10</mana>
 		</cost>
 	</spell>
 	<spell name="punch">

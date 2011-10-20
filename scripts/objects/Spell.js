@@ -8,11 +8,12 @@ function Spell(data) {
 	this.cost = $(data).find("cost").find("mana").text();
 	
 	this.cast = function(caster, target) {
-		if (target == null)
+		if (target == null || target.dead)
 			return 1;
 		
 		if (caster.distance(target) <= this.range && 
-			gameTime - this.lastCast >= this.cooldown) 
+			gameTime - this.lastCast >= this.cooldown &&
+			caster.resource.current >= this.cost) 
 		{
 			target.health.mod(this.damage);
 			caster.resource.mod(this.cost);

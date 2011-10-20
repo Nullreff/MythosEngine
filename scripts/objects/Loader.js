@@ -1,33 +1,30 @@
-Loader = {
-	loadCount: 0,
-	loadDone: false,
-	
-	setCallback: function(func) {
-		
-	},
+function Loader(callback) {
+	this.callback = callback;
+	this.loadCount = 0;
+	this.loadDone = false;
 
-	startLoad: function() {
+	this.startLoad = function() {
 		loadCount = 0;
 		loadDone = false;
-	},
+	};
 
-	endLoad: function() {
+	this.endLoad = function() {
 		loadDone = true;
 		if (loadCount == 0)
-			runGame();
-	},
+			this.callback();
+	};
 
-	itemStart: function() {
+	this.itemStart = function() {
 		loadCount++;
-	},
+	};
 
-	itemEnd: function() {
+	this.itemEnd = function() {
 		loadCount--;
 		if (loadCount == 0 && loadDone)
 			runGame();
-	},
+	};
 	
-	generateMap: function(data) {
+	this.generateMap = function(data) {
 		var tileSize = parseInt($(data).find("tilesize").text());
 		var spawn = {
 			x: parseInt($(data).find("spawn").attr("x")),
@@ -52,13 +49,14 @@ Loader = {
 		var tileSet = $(data).find("tileset").text();
 		var img = new Image();
 		console.log("\t'" + tileSet + "'");
-		Loader.itemStart();
+		this.itemStart();
+		var tempLoader = this;
 		img.onload = function() {
-			Loader.itemEnd();
+			tempLoader.itemEnd();
 		};
 		img.src = tileSet;
 		
 		return new Map(tileSize, img, spawn, mapData, NPCs);
-	},
+	};
 
-};
+}

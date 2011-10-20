@@ -1,6 +1,6 @@
 /*
  * Castle
- * Written By: Ryan Mendivil
+ * Written By: Ryan Mendivil (Nullreff)
  * 
  * 
  * 
@@ -45,28 +45,30 @@ var font = "sans";
 var fontsize = 16;
 
 function startGame() {
-	loadContent();
+	loadContent(runGame);
 }
 
-function loadContent() {
+function loadContent(callback) {
 	console.log("Loading Content...");
 	
 	var mapName = "data/map.xml";
 	var spellsName = "data/spells.xml";
 	
-	Loader.startLoad();
+	var loader = new Loader(callback);
+	
+	loader.startLoad();
 	console.log("Loading Maps...");
 	console.log("\t'" + mapName + "' ");
-	Loader.itemStart();
+	loader.itemStart();
 	$.get(mapName, function(data) {
-		map = Loader.generateMap(data);
+		map = loader.generateMap(data);
 		player.location.x = map.spawn.x;
 		player.location.y = map.spawn.y;
-		Loader.itemEnd();
+		loader.itemEnd();
 	});
 	
 	
-	Loader.itemStart();
+	loader.itemStart();
 	$.get(spellsName, function(data) {
 		console.log("Loading Spells...");
 		$(data).find("spell").each(function(num, data) {
@@ -74,10 +76,10 @@ function loadContent() {
 			spells[spell.name] = spell;
 			console.log("\t" + spell.name + ": " + spell.damage);
 		});
-		Loader.itemEnd();
+		loader.itemEnd();
 	});
 	
-	Loader.endLoad();
+	loader.endLoad();
 }
 
 function runGame() {
@@ -265,14 +267,15 @@ function drawUI(time) {
 	var count = 0;
 	for (var i in spells) {
 		var spell = spells[i];
-		if (gameTime - spell.lastCast >= spell.cooldown) {
-			viewport.g.fillStyle = "rgb(0,255,0)";
-		} else {
-			viewport.g.fillStyle = "rgb(255,0,0)";
-			viewport.g.fillText("" + Math.round((spell.cooldown - (gameTime - spell.lastCast)) / 1000), 15, count * 10 + 110);
-		}
 		if (player.target != null && spell.range <= player.distance(player.target)) {
 			viewport.g.fillStyle = "rgb(100,100,100)";
+		} else if (player.resource.current < spell.cost) {
+			viewport.g.fillStyle = "rgb(0,0,255)";
+		} else if (gameTime - spell.lastCast < spell.cooldown){
+			viewport.g.fillStyle = "rgb(255,0,0)";
+			viewport.g.fillText("" + Math.round((spell.cooldown - (gameTime - spell.lastCast)) / 1000), 15, count * 10 + 110);
+		} else {
+			viewport.g.fillStyle = "rgb(0,255,0)";
 		}
 		viewport.g.fillText(i, 35, count * 10 + 110);
 		count++;
@@ -284,40 +287,6 @@ function drawUI(time) {
 	viewport.g.arc(mouseState.x, mouseState.y, 5, 0, Math.PI * 2, true);
 	viewport.g.closePath();
 	viewport.g.fill();
-}
-
-function getTarget(range) {
-	var currDist = range;
-	var num = -1;
-	for (var i in map.NPCs) {
-		var dist = Math.sqrt(Math.pow(map.NPCs[i].x - player.x, 2) + Math.pow(map.NPCs[i].y - player.y, 2));
-		if (dist < currDist) {
-			currDist = dist;
-			num = i;
-		}
-	}
-	return num;
-}
-
-function die(target) {
-	target.dead = true;
-	if (player.target = target)
-		player.target = null;
-	setTimeout(resetDeathNotice, target == player ? 2000 : 200, target);
-}
-
-function resetDeathNotice(target) {
-	console.log("Respawned");
-	target.dead = false;
-	if (target.type == "player") {
-		target.location.x = map.spawn.x;
-		target.location.y = map.spawn.y;
-	} else if (target.type == "npc") {
-		var loc = getRandomLoc(true);
-		target.location.x = loc.x;
-		target.location.y = loc.y;
-	}
-	target.health.current = target.health.max;
 }
 
 function getRandomLoc(checkCol) {

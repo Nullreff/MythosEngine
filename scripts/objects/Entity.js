@@ -27,7 +27,7 @@ function Entity(name) {
 	this.update = function(time, map) {
 		// Death
 		if (this.health.current <= 0 && !this.dead)
-			die(this);
+			this.die();
 			
 		// Movement
 		var len = Math.sqrt(Math.pow(this.movement.x, 2) + Math.pow(this.movement.y, 2));
@@ -98,7 +98,30 @@ function Entity(name) {
 			}
 		}
 	};
+	
+	this.die = function() {
+		this.dead = true;
+		setTimeout(resetDeathNotice, this == player ? 2000 : 200, this);
+		
+		function resetDeathNotice(target) {
+			console.log("Respawned");
+			target.dead = false;
+			if (target.type == "player") {
+				target.location.x = map.spawn.x;
+				target.location.y = map.spawn.y;
+			} else if (target.type == "npc") {
+				var loc = getRandomLoc(true);
+				target.location.x = loc.x;
+				target.location.y = loc.y;
+			}
+			target.health.current = target.health.max;
+		}
+	};
+	
+	
 }
+
+
 
 function Stat(val, regen) {
 	this.current = val;
