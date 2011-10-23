@@ -38,7 +38,7 @@ var map = {};
 var spells = {};
 
 // Player
-var player = new Entity(name);
+var player = new Entity("Player");
 var viewport = null;
 // Style
 var font = "sans";
@@ -72,7 +72,7 @@ function loadContent(callback) {
 	$.get(spellsName, function(data) {
 		console.log("Loading Spells...");
 		$(data).find("spell").each(function(num, data) {
-			var spell = new Spell(data);
+			var spell = loader.loadSpell(data);
 			spells[spell.name] = spell;
 			console.log("\t" + spell.name + ": " + spell.damage);
 		});
@@ -165,10 +165,13 @@ function keyUp_event(event) {
 function keyPress_event(event) {
 	switch (event.which) {
 		case 49: // 1
-			spells["shoot"].cast(player, player.target);
+			spells["Shoot"].cast(player, player.target);
 		break;
 		case 50: // 2
-			spells["punch"].cast(player, player.target);
+			spells["Punch"].cast(player, player.target);
+		break;
+		case 51: // 3
+			spells["Lightning"].cast(player, player.target);
 		break;
 		
 	}
@@ -255,31 +258,10 @@ function getFill(playerName) {
 }
 
 function drawUI(time) {
-	viewport.g.fillStyle = "rgb(255,255,255)";
-	viewport.g.fillText("X: " + player.location.x + ",  Y: " + player.location.y, 5,10);
-	viewport.g.fillText("Tile: " + map.getTile(player.location.x, player.location.y), 5, 20);
-	viewport.g.fillText("FPS: " + Math.ceil(1000 / time) + " / " + fps, 5, 30);
-	viewport.g.fillText("Viewport: X: " + viewport.x + "   Y: " + viewport.y, 5, 40);
-	if (player.dead) {
-		viewport.g.fillText("You player.dead", (width / 2) - 20, height / 2);
-	}
-	viewport.g.fillText("Abilities:", 5, 100);
-	var count = 0;
-	for (var i in spells) {
-		var spell = spells[i];
-		if (player.target != null && spell.range <= player.distance(player.target)) {
-			viewport.g.fillStyle = "rgb(100,100,100)";
-		} else if (player.resource.current < spell.cost) {
-			viewport.g.fillStyle = "rgb(0,0,255)";
-		} else if (gameTime - spell.lastCast < spell.cooldown){
-			viewport.g.fillStyle = "rgb(255,0,0)";
-			viewport.g.fillText("" + Math.round((spell.cooldown - (gameTime - spell.lastCast)) / 1000), 15, count * 10 + 110);
-		} else {
-			viewport.g.fillStyle = "rgb(0,255,0)";
-		}
-		viewport.g.fillText(i, 35, count * 10 + 110);
-		count++;
-	}
+	viewport.UI.drawFrame(5, 5, 150, 50, player);
+	if (player.target != null)
+		viewport.UI.drawFrame(160, 5, 150, 50, player.target);
+	viewport.UI.drawSpellBar(viewport.width / 2, viewport.height - 64, 64, 64, spells);
 	
 	// Cursor
 	viewport.g.fillStyle = "rgb(0,0,0)";

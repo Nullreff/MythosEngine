@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?> 
 <spells>
-	<spell name="shoot">
+	<spell name="Shoot">
 		<damage>20</damage>
 		<range>200</range>
-		<cooldown>1000</cooldown>
-		<cost>
-			<mana>5</mana>
-		</cost>
+		<cooldown>2000</cooldown>
+		<cost>5</cost>
+		<icon>images/arrow.png</icon>
 	</spell>
-	<spell name="punch">
+	<spell name="Punch">
 		<damage>50</damage>
 		<range>64</range>
-		<cooldown>2000</cooldown>
-		<cost>
-			<mana>10</mana>
-		</cost>
+		<cooldown>1000</cooldown>
+		<cost>10</cost>
+		<icon>images/mace.png</icon>
+	</spell>
+	<spell name="Lightning">
+		<damage>100</damage>
+		<range>100</range>
+		<cooldown>5000</cooldown>
+		<cost>10</cost>
+		<icon>images/lightning.png</icon>
 	</spell>
 </spells>

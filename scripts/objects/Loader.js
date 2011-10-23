@@ -21,7 +21,7 @@ function Loader(callback) {
 	this.itemEnd = function() {
 		loadCount--;
 		if (loadCount == 0 && loadDone)
-			runGame();
+			this.callback();
 	};
 	
 	this.generateMap = function(data) {
@@ -50,13 +50,29 @@ function Loader(callback) {
 		var img = new Image();
 		console.log("\t'" + tileSet + "'");
 		this.itemStart();
-		var tempLoader = this;
+		var tempReff = this;
 		img.onload = function() {
-			tempLoader.itemEnd();
+			tempReff.itemEnd();
 		};
 		img.src = tileSet;
 		
 		return new Map(tileSize, img, spawn, mapData, NPCs);
 	};
 
+	this.loadSpell = function(data) {
+		var cooldown = parseInt($(data).find("cooldown").text());
+		var name = $(data).attr("name");
+		var damage = parseInt($(data).find("damage").text());
+		var range = parseInt($(data).find("range").text());
+		var cost = $(data).find("cost").text();
+		var img = new Image();
+		this.itemStart();
+		var tempReff = this;
+		img.onload = function() {
+			tempReff.itemEnd();
+		};
+		img.src = $(data).find("icon").text();
+		
+		return new Spell(name, cooldown, damage, range, cost, img);
+	};
 }

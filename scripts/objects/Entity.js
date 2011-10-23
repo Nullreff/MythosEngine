@@ -74,8 +74,8 @@ function Entity(name) {
 			
 			var health = this.health.current / this.health.max;
 			var resource = this.resource.current / this.resource.max;
-			var baseX = this.location.x - viewport.x - (this.graphics.size / 2);
-			var baseY = this.location.y - viewport.y - (this.graphics.size / 2);
+			var baseX = this.location.x - viewport.viewX - (this.graphics.size / 2);
+			var baseY = this.location.y - viewport.viewY - (this.graphics.size / 2);
 			
 			// this
 			viewport.g.fillStyle = this.graphics.color;
@@ -93,7 +93,8 @@ function Entity(name) {
 			viewport.g.fillRect(baseX + 1, baseY - 5, Math.ceil(parseFloat(this.graphics.size - 2) * resource), 2);
 			// Selected
 			if (selected) {
-				viewport.g.fillStyle = "rgb(255,100,0)";
+				viewport.g.strokeStyle = "rgb(255,100,0)";
+				viewport.g.lineWidth = 1;
 				viewport.g.strokeRect(baseX - 2, baseY - 2, this.graphics.size + 4, this.graphics.size + 4);
 			}
 		}

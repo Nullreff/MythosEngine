@@ -10,11 +10,11 @@ function Map(tileSize, tileImg, spawn, data, NPCs) {
 	this.draw = function(viewport) {
 		for (var x = 0;x <= viewport.g.canvas.width + this.tileSize;x += this.tileSize) {
 			for (var y = 0;y <= viewport.g.canvas.height + this.tileSize;y += this.tileSize) {
-				var tile = this.getTile(x + viewport.x, y + viewport.y);
+				var tile = this.getTile(x + viewport.viewX, y + viewport.viewY);
 				var tx = (tile * this.tileSize) % tileImg.width;
 				var ty = Math.floor((tile * this.tileSize) / tileImg.width) * this.tileSize;
-				var finalX = x - (viewport.x > 0 ? viewport.x % this.tileSize : this.tileSize + (viewport.x % this.tileSize));
-				var finalY = y - (viewport.y > 0 ? viewport.y % this.tileSize : this.tileSize + (viewport.y % this.tileSize));
+				var finalX = x - (viewport.viewX > 0 ? viewport.viewX % this.tileSize : this.tileSize + (viewport.viewX % this.tileSize));
+				var finalY = y - (viewport.viewY > 0 ? viewport.viewY % this.tileSize : this.tileSize + (viewport.viewY % this.tileSize));
 				viewport.g.drawImage(tileImg, tx, ty, this.tileSize, this.tileSize, 
 									finalX, finalY, this.tileSize, this.tileSize);
 				//viewport.g.fillStyle = "rgb(255,255,255)";

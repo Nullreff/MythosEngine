@@ -1,11 +1,11 @@
-function Spell(data) {
-	var cd = parseInt($(data).find("cooldown").text());
-	this.name = $(data).attr("name");
-	this.damage = parseInt($(data).find("damage").text());
-	this.range = parseInt($(data).find("range").text());
-	this.cooldown = cd;
-	this.lastCast = new Date().getTime() - cd;
-	this.cost = $(data).find("cost").find("mana").text();
+function Spell(name, cooldown, damage, range, cost, icon) {
+	this.name = name;
+	this.damage = damage;
+	this.range = range;
+	this.cooldown = cooldown;
+	this.lastCast = new Date().getTime() - cooldown;
+	this.cost = cost;
+	this.icon = icon;
 	
 	this.cast = function(caster, target) {
 		if (target == null || target.dead)
