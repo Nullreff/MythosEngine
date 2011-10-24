@@ -103,14 +103,14 @@ function Viewport(g, x, y, width, height) {
 				g.strokeRect(x, y, width, height);
 				g.drawImage(spell.icon, x + lw, y + lw, width - (lw * 2), height - (lw * 2));
 				
-				if (player.target != null && spell.range <= player.distance(player.target)) {
-					g.fillStyle = "rgba(100,100,100,0.5)";
+				if (player.target != null && spell.range <= player.distance(player.target)) { // Out of range
+					g.fillStyle = "rgba(255,0,0,0.5)";	
 					g.fillRect(x, y, width, height);
-				} else if (player.resource.current < spell.cost) {
+				} else if (player.resource.current < spell.cost) { // Not enough resource
 					g.fillStyle = "rgba(0,0,255,0.5)";
 					g.fillRect(x, y, width, height);
-				} else if (gameTime - spell.lastCast < spell.cooldown){
-					g.fillStyle = "rgba(255,0,0,0.5)";	
+				} else if (gameTime - spell.lastCast < spell.cooldown){ // On cooldown
+					g.fillStyle = "rgba(100,100,100,0.5)";
 					g.fillRect(x, y, width, height);	
 				} 
 				if (gameTime - spell.lastCast < spell.cooldown) {
