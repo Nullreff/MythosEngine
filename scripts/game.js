@@ -185,7 +185,13 @@ function mouseMove_event(event) {
 function mouseDown_event(event) {
 	updateMouse(event, true);
 	if (mouseState.left)
-		checkTarget();
+	{
+		var loc = viewport.worldLocation(mouseState.x, mouseState.y);
+		var ent = map.entityAt(loc.x, loc.y);
+		if (player.contains(loc.x, loc.y))
+			ent = player;
+		player.target = ent;
+	}
 }
 
 function mouseUp_event(event) {
@@ -212,25 +218,6 @@ function updateMouse(event, type) {
 	//console.log(event.which);
 }
 
-function checkTarget() {
-	var ent = entityAt(mouseState.x, mouseState.y);
-	player.target = ent;
-	console.log(ent);
-		
-}
-
-function entityAt(x, y) {
-	var loc = viewport.worldLocation(x, y);
-	var ent = null;
-	$(map.NPCs).each(function(num, data) {
-		if (data.contains(loc.x, loc.y))
-			ent = data;
-	});
-	if (player.contains(loc.x, loc.y))
-		ent = player;
-	return ent;
-}
-
 function tileCollision(tile) {
 	return tile == 2;
 }
@@ -248,13 +235,6 @@ function drawSpells(gameTime) {
 		if (spells[i].lastCast + 200 >= gameTime)
 			spells[i].draw(viewport, player, player.target);
 	}
-}
-
-function getFill(playerName) {
-	var red = parseInt(playerName.substr(0,2)) * 2;
-	var green = parseInt(playerName.substr(2,2)) * 2;
-	var blue = parseInt(playerName.substr(4,2)) * 2;
-	return "rgb(" +  red + "," + green + "," + blue + ")";
 }
 
 function drawUI(time) {

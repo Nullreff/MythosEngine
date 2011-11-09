@@ -6,15 +6,13 @@ var name = "" + Math.floor(Math.random() * 999899) + 100;
 
 window.onload = function() {
 	startGame();
-	/*
-	client.load();
+	/*client.load();
 	
 	client.addEvent('load', this.start);
 	client.addEvent('ready', this.ready);
     client.addEvent('multiPipeCreate', this.join);
     client.onRaw('move', this.rawMove);
-    client.onRaw('data', this.rawData); 
-    * */
+    client.onRaw('data', this.rawData); */
 };
 
 function start() {
