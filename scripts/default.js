@@ -5,16 +5,16 @@ var players = {};
 var name = "" + Math.floor(Math.random() * 999899) + 100;
 
 window.onload = function() {
+	fitToWindow();
+	$(window).resize(fitToWindow);
 	startGame();
-	/*
-	client.load();
+	/*client.load();
 	
 	client.addEvent('load', this.start);
 	client.addEvent('ready', this.ready);
     client.addEvent('multiPipeCreate', this.join);
     client.onRaw('move', this.rawMove);
-    client.onRaw('data', this.rawData); 
-    * */
+    client.onRaw('data', this.rawData); */
 };
 
 function start() {
@@ -65,5 +65,26 @@ function rawData(raw, pipe) {
 function sendMessage(cmd, params) {
 	//currentPipe.sendRaw(cmd, params);
 	
+}
+
+function displayIncrease() {
+	viewport.g.canvas.width += 32;
+	viewport.g.canvas.height += 32;
+	viewport.updateScale();
+}
+
+function displayDecrease() {
+	viewport.g.canvas.width -= 32;
+	viewport.g.canvas.height -= 32;
+	viewport.updateScale();
+}
+
+function fitToWindow() {
+	var g = document.getElementById('gameDisplay').getContext('2d');
+	var width = $(window).width() - 50;
+	var height = $(window).height() - 50;
+	$("#content").width(width);
+	g.canvas.width = width;
+	g.canvas.height = height;
 }
 

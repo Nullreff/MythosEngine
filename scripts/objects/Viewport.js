@@ -4,11 +4,13 @@ function Viewport(g, x, y, width, height) {
 	this.viewY = y;
 	this.width = width;
 	this.height = height;
+	this.scaleX = g.canvas.width / width;
+	this.scaleY = g.canvas.height / height;
 	
 	// Viewport Methods
 	this.update = function(entity) {
-		this.viewX = entity.location.x - Math.floor(this.width / 2);
-		this.viewY = entity.location.y - Math.floor(this.height / 2);
+		this.viewX = entity.location.x - Math.floor(this.width * this.scaleX / 2);
+		this.viewY = entity.location.y - Math.floor(this.height * this.scaleY / 2);
 	};
 	this.updateLocation = function(x, y) {
 		this.viewX = x;
@@ -17,6 +19,12 @@ function Viewport(g, x, y, width, height) {
 	this.updateSize = function(width, height) {
 		this.width = width;
 		this.height = height;
+		this.updateScale();
+	};
+	this.updateCanvasSize = function(width, height) {
+		this.g.canvas.width = width;
+		this.g.canvas.height = height;
+		this.updateScale();
 	};
 	this.screenLocationE = function(entity) {
 		return this.screenLocation(entity.location.x, entity.location.y);
@@ -42,24 +50,37 @@ function Viewport(g, x, y, width, height) {
 		return this.containsCoords(entity.location.x, entity.location.y, entity.graphics.size / 2);
 	};
 	
+	this.updateScale = function() {
+		this.scaleX = g.canvas.width / width;
+		this.scaleY = g.canvas.height / height;
+	};
+	
 	//UI
 	this.UI = {
 		drawFrame: function(x, y, width, height, entity) {
 			var health = entity.health.current / entity.health.max;
 			var resource = entity.resource.current / entity.resource.max;
+			
+			//Background
 			g.fillStyle = "rgb(0,0,0)";
 			g.fillRect(x, y, width, height);
 			g.fillStyle = "rgb(255,255,255)";
+			
+			// Name
 			this.setFontSize(10);
 			g.textAlign = "left";
 			g.textBaseline = "top";
 			g.fillText(entity.name, x + 2, y);
+			
+			// Health Bar
 			y += 14;
 			height -= 14;
 			g.fillStyle = "rgb(" + parseInt(255 - (255.0 * health)) + "," + parseInt(255.0 * health) + ",0)";
-			g.fillRect(x + 2, y + 2, Math.ceil(parseFloat(width - 4) * health), (height / 2) - 3);
+			g.fillRect(x + 2, y + 2, Math.ceil(parseFloat(width - 4) * health), (height / 2) - 4);
+			
+			// Mana Bar
 			g.fillStyle = "rgb(50,50,255)";
-			g.fillRect(x + 2, y + (height / 2) + 3, Math.ceil(parseFloat(width - 4) * resource), (height / 2) - 3);
+			g.fillRect(x + 2, y + (height / 2) + 1, Math.ceil(parseFloat(width - 4) * resource), (height / 2) - 4);
 		},
 		drawDebug: function(x, y) {
 			setFontSize(12);

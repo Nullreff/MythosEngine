@@ -27,5 +27,21 @@ function Map(tileSize, tileImg, spawn, data, NPCs) {
 		return (x >= this.width || y >= this.height || x < 0 || y < 0) ? 0 : parseInt(this.data[Math.floor(y / this.tileSize) ][Math.floor(x / this.tileSize)]);
 	};
 	
+	this.entityAt = function(x, y) {
+		var ent = null;
+		$(this.NPCs).each(function(num, data) {
+			if (data.contains(x, y))
+				ent = data;
+		});
+		return ent;
+	};
 	
+	this.getRandomLoc = function(checkCol) {
+		var val = {};
+		do {
+			val.x = Math.floor(Math.random() * this.tileSize * this.data[0].length);
+			val.y = Math.floor(Math.random() * this.tileSize * this.data.length);
+		} while (map.getTile(val.x, val.y) == 2 && checkCol);
+		return val;
+	};
 }

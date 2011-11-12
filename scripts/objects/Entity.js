@@ -9,7 +9,7 @@ function Entity(name) {
 	};
 	this.graphics = {
 		size: 30,
-		color: randomColor()
+		color: "rgb(100,100,100)"
 	};
 	this.movement = {
 		x: 0,
@@ -17,6 +17,10 @@ function Entity(name) {
 		speed: 100
 	};
 	this.location = {
+		x: 0,
+		y: 0,
+	};
+	this.spawnPoint = {
 		x: 0,
 		y: 0
 	};
@@ -26,8 +30,14 @@ function Entity(name) {
 	
 	this.update = function(time, map) {
 		// Death
-		if (this.health.current <= 0 && !this.dead)
+		if (this.health.current <= 0 && !this.dead) {
+			if (this.type = "npc") {
+				this.spawnPoint = map.getRandomLoc(true);
+			} else {
+				this.spawnPoint = map.spawn;
+			}
 			this.die();
+		}
 			
 		// Movement
 		var len = Math.sqrt(Math.pow(this.movement.x, 2) + Math.pow(this.movement.y, 2));
@@ -107,14 +117,8 @@ function Entity(name) {
 		function resetDeathNotice(target) {
 			console.log("Respawned");
 			target.dead = false;
-			if (target.type == "player") {
-				target.location.x = map.spawn.x;
-				target.location.y = map.spawn.y;
-			} else if (target.type == "npc") {
-				var loc = getRandomLoc(true);
-				target.location.x = loc.x;
-				target.location.y = loc.y;
-			}
+			target.location.x = target.spawnPoint.x;
+			target.location.y = target.spawnPoint.y;
 			target.health.current = target.health.max;
 		}
 	};
