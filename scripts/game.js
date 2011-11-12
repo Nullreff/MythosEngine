@@ -241,26 +241,7 @@ function drawUI(time) {
 	viewport.UI.drawFrame(5, 5, 150, 50, player);
 	if (player.target != null)
 		viewport.UI.drawFrame(160, 5, 150, 50, player.target);
-	viewport.UI.drawSpellBar(viewport.width / 2, viewport.height - 64, 64, 64, spells);
-	
-	// Cursor
-	viewport.g.fillStyle = "rgb(0,0,0)";
-	viewport.g.beginPath();
-	viewport.g.arc(mouseState.x, mouseState.y, 5, 0, Math.PI * 2, true);
-	viewport.g.closePath();
-	viewport.g.fill();
-}
-
-function getRandomLoc(checkCol) {
-	var val = {
-		x: Math.floor(Math.random() * map.tileSize * map.data[0].length),
-		y: Math.floor(Math.random() * map.tileSize * map.data.length)
-	};
-	while (map.getTile(val.x, val.y) == 2 && checkCol) {
-		val.x = Math.floor(Math.random() * map.tileSize * map.data[0].length);
-		val.y = Math.floor(Math.random() * map.tileSize * map.data.length);
-	}
-	return val;
+	viewport.UI.drawSpellBar(viewport.g.canvas.width / 2, viewport.g.canvas.height - 64, 64, 64, spells);
 }
 
 function randomColor() {

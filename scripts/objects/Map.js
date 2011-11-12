@@ -34,5 +34,14 @@ function Map(tileSize, tileImg, spawn, data, NPCs) {
 				ent = data;
 		});
 		return ent;
-	}
+	};
+	
+	this.getRandomLoc = function(checkCol) {
+		var val = {};
+		do {
+			val.x = Math.floor(Math.random() * this.tileSize * this.data[0].length);
+			val.y = Math.floor(Math.random() * this.tileSize * this.data.length);
+		} while (map.getTile(val.x, val.y) == 2 && checkCol);
+		return val;
+	};
 }

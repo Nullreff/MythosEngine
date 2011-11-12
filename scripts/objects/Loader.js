@@ -42,6 +42,7 @@ function Loader(callback) {
 			var npc = new Entity($(data).attr("name"));
 			npc.location.x = parseInt($(data).find("x").text());
 			npc.location.y = parseInt($(data).find("y").text());
+			npc.graphics.color = $(data).find("color").text();
 			npc.type = "npc";
 			NPCs.push(npc);
 		});

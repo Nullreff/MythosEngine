@@ -9,10 +9,12 @@
 		<npc name="test">
 			<x>32</x>
 			<y>32</y>
+			<color>rgb(100,255,150)</color>
 		</npc>
 		<npc name="test2">
 			<x>10</x>
 			<y>100</y>
+			<color>rgb(150,255,100)</color>
 		</npc>
 	</npcs>
 	<data>

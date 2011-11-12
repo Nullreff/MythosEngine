@@ -21,7 +21,12 @@
 		<div id="content">
 				<canvas id="gameDisplay" width="800" height="600"></canvas>
 		</div>
-		<div id="help">
+		<a onclick="$('#help').slideToggle();">Hide/Show</a>
+		<div id="help" style="display:none;">
+			<div>
+				<button onclick="displayIncrease(); return false;">Larger</button>
+				<button onclick="displayDecrease(); return false;">Smaller</button>
+			</div>
 			<p>
 				Move using wsad or arrow keys.<br />
 				Target things by clicking on them.<br />
