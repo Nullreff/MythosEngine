@@ -1,5 +1,9 @@
+///////////////////////
+// Random Ideas File //
+///////////////////////
+
 Large world that consists of Open terrain with castles and a forrest.
-Players spawn in the forrest twards the center of the map.
+Players spawn in the forrest towards the center of the map.
 Players can form alliances with other players.
 Colors designate players:
 	-Green: Ally, cannot attack
@@ -8,32 +12,30 @@ Colors designate players:
 	-Red: This person has attacked you or an ally
 Castles constantly spawn monsters that inhabit the open terrain and fight each other and players.
 Monsters cannot enter the forrest.  They instantly die if forced to do so.
-Castles can be taken by groups of 3 or more players.
+Castles can be taken by groups of players.
 Once taken, all monsters spawned will be allyed to the players who took the castle.
 Castles also contain other benifits that buff the players.  
 However it takes time to build up both benifits and the army of monsters.
-If a castle is taken from a group of players, they loose all the benifits and the army.
+If a castle is taken from a group of players, they loose all the benefits but any army they had remains under their control.
 Open terrain contains some sort of valuable thing that players can gather using the armies from castles.
 Players without armies should also be able to gather the valuable things, but it should be much more dangerous.
 There will be more than one patch of forrest on the map.
 Players can travel from patch to patch either by moving across the open terrain (should be dangerous).
 Or by traveling through caves / dungons (should also be slower but safer and contain rewards).
 Forrest is almost a staging area where players can build their resources and form alliances to attack the castles.
-Not a questing area.  SHOULD NOT BE GRINDY.  Kind of like a game lobby.
+Not a questing area.  Kind of like a game lobby.
 Players are flagged for pvp as soon as they leave the woods.
-Players inside the woods can pvp but it is turned off by default.
-Dueling is alowed.  Dueles between alliances are allowed.
+Players inside the woods can pvp or skirmish other players but it is turned off by default.
 Class based system?  Should be well ballanced as pvp is a main aspect of this game.
 Spawn area should have pvp perma disabled?
-Monsters in the castle should have a fluid but minimalistic control.  Choose what sort of army do you want.
-Should some stay back and guard the castle.  Should some come with you.
+Army from the castle should have a fluid but minimalistic control.  Choose what sort of army do you want.
+Some stay back and guard the castle.  Should some come with you.
 Should be like shouting battle commands such as charge, retreat, flank right, etc.  AI will hopefully be smart.
 You are rather like a hero, commanding the army and fighting along side it as well.
-Seige vehicles can be built to attack the castles.  Possibly in the forrest?  In another castle?
-Some sort of leveling/ranking system that proves a player is skilled but doesn't give too much of an advantage
-over lower level people.
+Macines can be built to attack the castles.  Possibly in the forrest?  In another castle?
+Some sort of leveling/ranking system that proves a player is skilled but doesn't give too much of an advantage over lower level people.
 Possibly have castles takeable by one person but have it be extremly hard?
-Power in army conveyed by how many humans you have in it?
+Power in army conveyed by how many players you have in it?
 You and your group can control more than one castle but it should make you feel spread out.
 A castle needs player(s) in order to be properly defended.
 Should solo people be able to be sucessfull?

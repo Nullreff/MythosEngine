@@ -1,0 +1,30 @@
+Castle - A base cature game written entirely in Javascript
+
+Currently a work in progress.  So far we have:
+- Maps
+  - Created using data stored in XML files
+  - Build as a set of tiles
+  - Types of terrain
+    - Passable: everyone can freely walk over
+    - Impassable: no one can walk over
+  - Map reverts to default tile past the edge of the tileset data
+- Combat
+  - Basic resource system of health and mana
+  - Abilites can
+    - Modify players mana
+    - Modify players health
+    - Have cooldowns before they can be cast again
+    - Have limited range that they can be cast in
+- Input
+  - Players can move around the map using the arrow keys or WSAD
+  - Players can target entities by clicking on them
+  - Players can cast spells using the number keys
+- Networking
+  - Uses a Nodejs server to connect clients
+  - Work in progress
+- UI
+  - Frames
+    - Entity unit frames for players and enemies
+    - Spell bar showing spells and information about them
+  - Game resizes depending on the size of the browser window
+  - Custom UI system using XML files in progress
