@@ -10,9 +10,10 @@ Currently a work in progress.  So far we have:
   - Map reverts to default tile past the edge of the tileset data
 - Combat
   - Basic resource system of health and mana
-  - Abilites can
-    - Modify players mana
-    - Modify players health
+  - Death and respawn system
+  - Players can use Abilites that
+    - Modify entities mana
+    - Modify entities health
     - Have cooldowns before they can be cast again
     - Have limited range that they can be cast in
 - Input
