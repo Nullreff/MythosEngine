@@ -33,7 +33,7 @@ var mouseState = {
 };
 
 // Data
-loadCount = 0;
+var loadCount = 0;
 
 // Map
 var map = {};
@@ -255,7 +255,6 @@ function updateMouse(event, type) {
 	mouseState.right = type;
 	break;
     }
-    //console.log(event.which);
 }
 
 function tileCollision(tile) {

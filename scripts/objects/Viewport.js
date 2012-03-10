@@ -73,16 +73,29 @@ function Viewport(g, x, y, width, height) {
 	    g.textAlign = "left";
 	    g.textBaseline = "top";
 	    g.fillText(entity.name, x + 2, y);
-			
+
 	    // Health Bar
 	    y += 14;
 	    height -= 14;
-	    g.fillStyle = "rgb(" + parseInt(255 - (255.0 * health)) + "," + parseInt(255.0 * health) + ",0)";
-	    g.fillRect(x + 2, y + 2, Math.ceil(parseFloat(width - 4) * health), (height / 2) - 4);
+	    g.fillStyle = "rgb(" + 
+		parseInt(255 - (255.0 * health)) + "," + 
+		parseInt(255.0 * health) + 
+		",0)";
+	    g.fillRect(
+		x + 2, 
+		y + 2, 
+		Math.ceil(parseFloat(width - 4) * health), 
+		(height / 2) - 4
+	    );
 	    
 	    // Mana Bar
 	    g.fillStyle = "rgb(50,50,255)";
-	    g.fillRect(x + 2, y + (height / 2) + 1, Math.ceil(parseFloat(width - 4) * resource), (height / 2) - 4);
+	    g.fillRect(
+		x + 2, 
+		y + (height / 2) + 1, 
+		Math.ceil(parseFloat(width - 4) * resource), 
+		(height / 2) - 4
+	    );
 	},
 	drawDebug: function(x, y) {
 	    setFontSize(12);
@@ -133,14 +146,18 @@ function Viewport(g, x, y, width, height) {
 		    g.fillRect(x, y, width, height);
 		} else if (gameTime - spell.lastCast < spell.cooldown){ // On cooldown
 		    g.fillStyle = "rgba(100,100,100,0.5)";
-		    g.fillRect(x, y, width, height);	
-		} 
+		    g.fillRect(x, y, width, height);
+		}
 		if (gameTime - spell.lastCast < spell.cooldown) {
-		    g.fillStyle = "rgb(255,255,255)";	
+		    g.fillStyle = "rgb(255,255,255)";
 		    this.setFontSize(40);
 		    g.textAlign = "center";
 		    g.textBaseline = "middle";
-		    g.fillText("" + Math.ceil((spell.cooldown - (gameTime - spell.lastCast)) / 1000), x + (width / 2), y + (height / 2));
+		    g.fillText(
+			"" + Math.ceil((spell.cooldown - (gameTime - spell.lastCast)) / 1000), 
+			x + (width / 2), 
+			y + (height / 2)
+		    );
 		}
 		
 		x += width;
