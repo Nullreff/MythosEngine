@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<UI>
+	<config>
+		<maxfps>20</maxfps>
+		<resolution>
+			<x>400</x>
+			<y>300</y>
+		</resolution>
+	</config>
+	<frames>
+		<frame type="portrait" entity="player">
+			<anchor from="left" to="left" offset="5"/>
+			<anchar from="top" to="top" offset="5" />
+			<frame type="portrait" entity="player.target">
+				<anchor from="left" to="right" offset="5" />
+				<anchor from="top" to="top" />
+			</frame>
+		</frame>
+		<frame type="spells" entity="player" width= "64" height="64">
+			<anchor from="center" to="center" />
+			<anchor from="bottom" to="bottom" />
+		</frame>
+	</frames>
+	<templates>
+		<template type="portrait" width="150" height="150" />
+	</templates>
+</UI>
