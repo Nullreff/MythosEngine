@@ -14,7 +14,7 @@
     <script type="text/javascript" src="scripts/objects/Interface.js"></script>
     <script type="text/javascript" src="scripts/game.js"></script>
     <script type="text/javascript" src="scripts/default.js"></script>
-    <title>Castle</title>
+    <title>Ravaged Mythos</title>
   </head>
   <body>
     <div id="content">
